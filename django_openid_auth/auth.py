@@ -105,7 +105,7 @@ class OpenIDBackend(object):
         except User.DoesNotExist:
             return None
 
-    def authenticate(self, request, **kwargs):
+    def authenticate(self, request=None, **kwargs):
         """Authenticate the user based on an OpenID response."""
         # Require that the OpenID response be passed in as a keyword
         # argument, to make sure we don't match the username/password
