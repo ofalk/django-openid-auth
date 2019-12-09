@@ -49,7 +49,7 @@ except ImportError:
     from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import QueryDict
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render
 from django.template import RequestContext
 try:
     from django.views.decorators.csrf import csrf_exempt
