@@ -103,6 +103,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django_openid_auth',
+    'django.contrib.messages' ,
 )
 
 if django.VERSION < (1, 7):
