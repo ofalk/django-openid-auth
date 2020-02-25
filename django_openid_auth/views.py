@@ -313,14 +313,12 @@ def login_complete(request, redirect_field_name=REDIRECT_FIELD_NAME,
         found = False
 
         # First try - http w/ trailing slash
-        print('Trying with: %s' % openid)
         if UserOpenID.objects.filter(claimed_id = openid):
             openid_response.identity_url = openid
             found = True
 
         # Second try - http w/o trailing slash
         if not found:
-            print('Trying with: %s' % openid)
             openid = openid[0:-1]
             if UserOpenID.objects.filter(claimed_id = openid):
                 openid_response.identity_url = openid
@@ -328,7 +326,6 @@ def login_complete(request, redirect_field_name=REDIRECT_FIELD_NAME,
 
         # Third try - https w/o trailing slash
         if not found:
-            print('Trying with: %s' % openid)
             openid = openid.replace('http://', 'https://')
             if UserOpenID.objects.filter(claimed_id = openid):
                 openid_response.identity_url = openid
@@ -336,7 +333,6 @@ def login_complete(request, redirect_field_name=REDIRECT_FIELD_NAME,
 
         # Forth try / last resort - https w/ trailing slash
         if not found:
-            print('Trying with: %s' % openid)
             openid = openid + '/'
             if UserOpenID.objects.filter(claimed_id = openid):
                 openid_response.identity_url = openid
