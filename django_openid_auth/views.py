@@ -304,6 +304,46 @@ def login_complete(request, redirect_field_name=REDIRECT_FIELD_NAME,
             request, 'This is an OpenID relying party endpoint.')
 
     if openid_response.status == SUCCESS:
+        # Try to find the user with different OpenID variants
+        # Build up the base ID - http w/ trailing slash
+        openid = openid_response.identity_url.replace('https://', 'http://')
+        if openid[-1] != '/':
+            openid = openid + '/'
+
+        found = False
+
+        # First try - http w/ trailing slash
+        print('Trying with: %s' % openid)
+        if UserOpenID.objects.filter(claimed_id = openid):
+            openid_response.identity_url = openid
+            found = True
+
+        # Second try - http w/o trailing slash
+        if not found:
+            print('Trying with: %s' % openid)
+            openid = openid[0:-1]
+            if UserOpenID.objects.filter(claimed_id = openid):
+                openid_response.identity_url = openid
+                found = True
+
+        # Third try - https w/o trailing slash
+        if not found:
+            print('Trying with: %s' % openid)
+            openid = openid.replace('http://', 'https://')
+            if UserOpenID.objects.filter(claimed_id = openid):
+                openid_response.identity_url = openid
+                found = True
+
+        # Forth try / last resort - https w/ trailing slash
+        if not found:
+            print('Trying with: %s' % openid)
+            openid = openid + '/'
+            if UserOpenID.objects.filter(claimed_id = openid):
+                openid_response.identity_url = openid
+                found = True
+
+        # if found = False?!
+
         try:
             user = authenticate(openid_response=openid_response)
         except DjangoOpenIDException as e:
